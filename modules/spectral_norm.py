@@ -110,21 +110,3 @@ class SNLinear(nn.Linear, SpectralNorm):
 
     def forward(self, x):
         return F.linear(input=x, weight=self.sn_weights(), bias=self.bias)
-
-
-class SNEmbedding(nn.Embedding, SpectralNorm):
-    r"""
-    Spectrally normalized layer for Embedding.
-
-    Attributes:
-        num_embeddings (int): Number of embeddings.
-        embedding_dim (int): Dimensions of each embedding vector
-    """
-    def __init__(self, num_embeddings, embedding_dim, *args, **kwargs):
-        nn.Embedding.__init__(self, num_embeddings, embedding_dim, *args,
-                              **kwargs)
-
-        SpectralNorm.__init__(self, n_dim=num_embeddings)
-
-    def forward(self, x):
-        return F.embedding(input=x, weight=self.sn_weights())
