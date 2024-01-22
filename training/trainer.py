@@ -4,11 +4,9 @@ Implementation of Trainer object for training GANs.
 import os
 import re
 import time
-
 import torch
-
-from torch_mimicry.training import scheduler, logger, metric_log
-from torch_mimicry.utils import common
+from training import logger, metric_log
+from utils import common
 
 
 class Trainer:
@@ -23,16 +21,13 @@ class Trainer:
         dataloader (DataLoader): Torch object for loading data from a dataset object.
         num_steps (int): The number of training iterations.
         n_dis (int): Number of discriminator update steps per generator training step.
-        lr_decay (str): The learning rate decay policy to use.
         log_dir (str): The path to storing logging information and checkpoints.
         device (Device): Torch device object to send model/data to.
         logger (Logger): Logger object for visualising training information.
-        scheduler (LRScheduler): GAN training specific learning rate scheduler object.
         params (dict): Dictionary of training hyperparameters.
         netD_ckpt_file (str): Custom checkpoint file to restore discriminator from.
         netG_ckpt_file (str): Custom checkpoint file to restore generator from.
         print_steps (int): Number of training steps before printing training info to stdout.
-        vis_steps (int): Number of training steps before visualising images with TensorBoard.
         flush_secs (int): Number of seconds before flushing summaries to disk.
         log_steps (int): Number of training steps before writing summaries to TensorBoard.
         save_steps (int): Number of training steps bfeore checkpointing.
@@ -46,36 +41,31 @@ class Trainer:
                  num_steps,
                  log_dir='./log',
                  n_dis=1,
-                 lr_decay=None,
                  device=None,
                  netG_ckpt_file=None,
                  netD_ckpt_file=None,
                  print_steps=1,
-                 vis_steps=500,
                  log_steps=50,
                  save_steps=5000,
                  flush_secs=30):
         # Input values checks
-        ints_to_check = {
+        required_params = {
             'num_steps': num_steps,
             'n_dis': n_dis,
             'print_steps': print_steps,
-            'vis_steps': vis_steps,
             'log_steps': log_steps,
             'save_steps': save_steps,
             'flush_secs': flush_secs
         }
-        for name, var in ints_to_check.items():
+        for name, var in required_params.items():
             if var < 1:
-                raise ValueError('{} must be at least 1 but got {}.'.format(
-                    name, var))
+                raise ValueError('{} must be at least 1 but got {}.'.format(name, var))
 
         self.netD = netD
         self.netG = netG
         self.optD = optD
         self.optG = optG
         self.n_dis = n_dis
-        self.lr_decay = lr_decay
         self.dataloader = dataloader
         self.num_steps = num_steps
         self.device = device
@@ -83,7 +73,6 @@ class Trainer:
         self.netG_ckpt_file = netG_ckpt_file
         self.netD_ckpt_file = netD_ckpt_file
         self.print_steps = print_steps
-        self.vis_steps = vis_steps
         self.log_steps = log_steps
         self.save_steps = save_steps
 
@@ -96,11 +85,6 @@ class Trainer:
                                     dataset_size=len(self.dataloader),
                                     flush_secs=flush_secs,
                                     device=self.device)
-
-        self.scheduler = scheduler.LRScheduler(lr_decay=self.lr_decay,
-                                               optD=self.optD,
-                                               optG=self.optG,
-                                               num_steps=self.num_steps)
 
         # Obtain custom or latest checkpoint files
         if self.netG_ckpt_file:
@@ -127,7 +111,6 @@ class Trainer:
             'num_steps': self.num_steps,
             'batch_size': self.dataloader.batch_size,
             'n_dis': self.n_dis,
-            'lr_decay': self.lr_decay,
             'optD': optD.__repr__(),
             'optG': optG.__repr__(),
             'save_steps': self.save_steps,
@@ -298,9 +281,6 @@ class Trainer:
                 # -------------------------------
                 global_step += 1
 
-                log_data = self.scheduler.step(log_data=log_data,
-                                               global_step=global_step)
-
                 # -------------------------
                 #   Logging and Metrics
                 # -------------------------
@@ -315,10 +295,6 @@ class Trainer:
                                           time_taken=(curr_time - start_time) /
                                           self.print_steps)
                     start_time = curr_time
-
-                if global_step % self.vis_steps == 0:
-                    self.logger.vis_images(netG=self.netG,
-                                           global_step=global_step)
 
                 if global_step % self.save_steps == 0:
                     print("INFO: Saving checkpoints...")

@@ -6,8 +6,6 @@ import os
 import numpy as np
 import torch
 from torch.utils.tensorboard import SummaryWriter
-from torchvision import utils as vutils
-
 
 class Logger:
     """
@@ -151,60 +149,3 @@ class Logger:
         labels = torch.from_numpy(labels).to(self.device)
 
         return labels
-
-    def vis_signals(self, netG, global_step, num_signals=64):
-        """
-        Produce visualisations of the G(z), one fixed and one random.
-
-        Args:
-            netG (Module): Generator model object for producing signals.
-            global_step (int): Global step variable for syncing logs.
-            num_signals (int): The number of signals to visualise.
-
-        Returns:
-            None
-        """
-        img_dir = os.path.join(self.log_dir, 'signals')
-        if not os.path.exists(img_dir):
-            os.makedirs(img_dir)
-
-        with torch.no_grad():
-            # Generate random signals
-            noise = torch.randn((num_signals, netG.nz), device=self.device)
-            fake_signals = netG(noise).detach().cpu()
-
-            # Generate fixed random signals
-            fixed_noise = self._get_fixed_noise(nz=netG.nz,
-                                                num_signals=num_signals)
-
-            if hasattr(netG, 'num_classes') and netG.num_classes > 0:
-                fixed_labels = self._get_fixed_labels(num_signals,
-                                                      netG.num_classes)
-                fixed_fake_signals = netG(fixed_noise,
-                                         fixed_labels).detach().cpu()
-            else:
-                fixed_fake_signals = netG(fixed_noise).detach().cpu()
-
-            # Map name to results
-            signals_dict = {
-                'fixed_fake': fixed_fake_signals,
-                'fake': fake_signals
-            }
-
-            # Visualise all results
-            for name, signals in signals_dict.items():
-                signals_viz = vutils.make_grid(signals,
-                                              padding=2,
-                                              normalize=True)
-
-                vutils.save_signal(signals_viz,
-                                  '{}/{}_samples_step_{}.png'.format(
-                                      img_dir, name, global_step),
-                                  normalize=True)
-
-                if 'img' not in self.writers:
-                    self.writers['img'] = self._build_writer('img')
-
-                self.writers['img'].add_signal('{}_vis'.format(name),
-                                              signals_viz,
-                                              global_step=global_step)
