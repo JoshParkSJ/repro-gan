@@ -108,7 +108,7 @@ class WGANGPBaseDiscriminator(gan.BaseDiscriminator):
         self.zero_grad()
 
         # Produce real signals
-        real_signals, _ = real_batch
+        real_signals = real_batch
         batch_size = real_signals.shape[0]  # Match batch sizes for the last iteration
 
         # Produce fake signals
