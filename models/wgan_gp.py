@@ -12,16 +12,16 @@ class WGANGPBaseGenerator(gan.BaseGenerator):
 
     Attributes:
         channels (int): Number of channels in the input signal.
-        sequence_length (int): Starting width for upsampling generator output to a signal.
+        nz (int): Latent size of noise and generated signal.
         loss_type (str): Name of loss to use for GAN loss.        
     """
     def __init__(self,
                  channels,
-                 sequence_length,
+                 nz,
                  loss_type='wasserstein',
                  **kwargs):
         super().__init__(channels=channels,
-                         sequence_length=sequence_length,
+                         nz=nz,
                          loss_type=loss_type,
                          **kwargs)
 

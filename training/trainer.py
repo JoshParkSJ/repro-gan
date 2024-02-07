@@ -20,17 +20,15 @@ class Trainer:
         optG (Optimizer): Torch optimizer object for generator.
         dataloader (DataLoader): Torch object for loading data from a dataset object.
         num_steps (int): The number of training iterations.
-        n_dis (int): Number of discriminator update steps per generator training step.
         log_dir (str): The path to storing logging information and checkpoints.
+        n_dis (int): Number of discriminator update steps per generator training step.
         device (Device): Torch device object to send model/data to.
-        logger (Logger): Logger object for visualising training information.
-        params (dict): Dictionary of training hyperparameters.
-        netD_ckpt_file (str): Custom checkpoint file to restore discriminator from.
         netG_ckpt_file (str): Custom checkpoint file to restore generator from.
+        netD_ckpt_file (str): Custom checkpoint file to restore discriminator from.
         print_steps (int): Number of training steps before printing training info to stdout.
-        flush_secs (int): Number of seconds before flushing summaries to disk.
         log_steps (int): Number of training steps before writing summaries to TensorBoard.
         save_steps (int): Number of training steps bfeore checkpointing.
+        flush_secs (int): Number of seconds before flushing summaries to disk.
     """
     def __init__(self,
                  netD,

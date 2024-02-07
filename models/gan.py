@@ -11,13 +11,13 @@ class BaseGenerator(basemodel.BaseModel):
 
     Attributes:
         channels (int): Number of channels in the input signal.
-        sequence_length (int): Starting width for upsampling generator output to a signal.
+        nz (int): Latent size of noise and generated signal.
         loss_type (str): Name of loss to use for GAN loss.
     """
-    def __init__(self, channels, sequence_length, loss_type, **kwargs):
+    def __init__(self, channels, nz, loss_type, **kwargs):
         super().__init__(**kwargs)
         self.channels = channels
-        self.sequence_length = sequence_length
+        self.nz = nz
         self.loss_type = loss_type
 
     def generate_signals(self, num_signals, device=None):
@@ -34,7 +34,7 @@ class BaseGenerator(basemodel.BaseModel):
         if device is None:
             device = self.device
 
-        noise = torch.randn((num_signals, self.channels, self.sequence_length), device=device)
+        noise = torch.randn((num_signals, self.channels, self.nz), device=device)
         fake_signals = self.forward(noise)
 
         return fake_signals
