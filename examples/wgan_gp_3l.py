@@ -22,8 +22,8 @@ class Discriminator(WGANGPBaseDiscriminator):
         self.sblock1 = DBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, downsample=True)
         self.sblock2 = DBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, downsample=True)
         self.sblock3 = DBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, downsample=True)
-        self.conv = nn.Conv1d(self.ndf, 64, 1, 1, 0)
-        self.end = nn.Linear(45, 1)
+        self.conv = nn.Conv1d(self.ndf, 64, kernel_size=1, stride=1, padding=0)
+        self.end = nn.Linear(3152, 1)
         
         nn.init.normal_(self.conv.weight.data, 0.0, 0.02)
         nn.init.normal_(self.end.weight.data, 0.0, 0.02)
@@ -42,9 +42,9 @@ class Generator(WGANGPBaseGenerator):
         super().__init__(channels=64, nz=3152)
 
         # Build the layers
-        self.block1 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=True)
-        self.block2 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=True)
-        self.block3 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=True)
+        self.block1 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=False)
+        self.block2 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=False)
+        self.block3 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=False)
         self.conv = nn.Conv1d(self.ngf, 64, kernel_size=1, stride=1, padding=0)
 
         # Initialise the weights
