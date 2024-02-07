@@ -1,4 +1,4 @@
-from .layers import *
+from .basemodel import *
 from .losses import *
-from .resblocks import *
-from .spectral_norm import *
+from .gblock import *
+from .dblock import *

@@ -5,13 +5,6 @@ import torch
 import torch.nn.functional as F
 
 
-def _bce_loss_with_logits(output, labels, **kwargs):
-    r"""
-    Wrapper for BCE loss with logits.
-    """
-    return F.binary_cross_entropy_with_logits(output, labels, **kwargs)
-
-
 def minimax_loss_gen(output_fake, real_label_val=1.0, **kwargs):
     r"""
     Standard minimax loss for GANs through the BCE Loss with logits fn.
@@ -28,7 +21,7 @@ def minimax_loss_gen(output_fake, real_label_val=1.0, **kwargs):
                              real_label_val,
                              device=output_fake.device)
 
-    loss = _bce_loss_with_logits(output_fake, real_labels, **kwargs)
+    loss = F.binary_cross_entropy_with_logits(output_fake, real_labels, **kwargs)
 
     return loss
 
@@ -60,13 +53,15 @@ def minimax_loss_dis(output_fake,
                              device=output_real.device)
 
     # FF, compute loss and backprop D
-    errD_fake = _bce_loss_with_logits(output=output_fake,
-                                      labels=fake_labels,
-                                      **kwargs)
+    errD_fake = F.binary_cross_entropy_with_logits(
+        output=output_fake,
+        labels=fake_labels,
+        **kwargs)
 
-    errD_real = _bce_loss_with_logits(output=output_real,
-                                      labels=real_labels,
-                                      **kwargs)
+    errD_real = F.binary_cross_entropy_with_logits(
+        output=output_real,
+        labels=real_labels,
+        **kwargs)
 
     # Compute cumulative error
     loss = errD_real + errD_fake
@@ -131,8 +126,7 @@ def hinge_loss_dis(output_fake, output_real):
     Returns:
         Tensor: A scalar tensor loss output.        
     """
-    loss = F.relu(1.0 - output_real).mean() + \
-           F.relu(1.0 + output_fake).mean()
+    loss = F.relu(1.0 - output_real).mean() + F.relu(1.0 + output_fake).mean()
 
     return loss
 

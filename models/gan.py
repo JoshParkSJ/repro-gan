@@ -2,25 +2,21 @@
 Implementation of Base GAN models.
 """
 import torch
-
-from torch_mimicry.nets.basemodel import basemodel
-from torch_mimicry.modules import losses
-
+from modules import basemodel
+from modules import losses
 
 class BaseGenerator(basemodel.BaseModel):
     r"""
     Base class for a generic unconditional generator model.
 
     Attributes:
-        nz (int): Noise dimension for upsampling.
-        ngf (int): Variable controlling generator feature map sizes.
+        channels (int): Number of channels in the input signal.
         sequence_length (int): Starting width for upsampling generator output to a signal.
         loss_type (str): Name of loss to use for GAN loss.
     """
-    def __init__(self, nz, ngf, sequence_length, loss_type, **kwargs):
+    def __init__(self, channels, sequence_length, loss_type, **kwargs):
         super().__init__(**kwargs)
-        self.nz = nz
-        self.ngf = ngf
+        self.channels = channels
         self.sequence_length = sequence_length
         self.loss_type = loss_type
 
@@ -38,7 +34,7 @@ class BaseGenerator(basemodel.BaseModel):
         if device is None:
             device = self.device
 
-        noise = torch.randn((num_signals, self.nz), device=device)
+        noise = torch.randn((num_signals, self.channels, self.sequence_length), device=device)
         fake_signals = self.forward(noise)
 
         return fake_signals
@@ -77,7 +73,6 @@ class BaseGenerator(basemodel.BaseModel):
                    optG,
                    log_data,
                    device=None,
-                   global_step=None,
                    **kwargs):
         r"""
         Takes one training step for G.
@@ -88,7 +83,6 @@ class BaseGenerator(basemodel.BaseModel):
             optG (Optimizer): Optimizer for updating generator's parameters.
             log_data (dict): A dict mapping name to values for logging uses.
             device (torch.device): Device to use for running the model.
-            global_step (int): Variable to sync training, logging and checkpointing. Useful for dynamic changes to model amidst training.
 
         Returns:
             Returns MetricLog object containing updated logging variables after 1 training step.
@@ -123,12 +117,12 @@ class BaseDiscriminator(basemodel.BaseModel):
     Base class for a generic unconditional discriminator model.
 
     Attributes:
-        ndf (int): Variable controlling discriminator feature map sizes.
+        channels (int): Number of channels in the input signal.
         loss_type (str): Name of loss to use for GAN loss.
     """
-    def __init__(self, ndf, loss_type, **kwargs):
+    def __init__(self, channels, loss_type, **kwargs):
         super().__init__(**kwargs)
-        self.ndf = ndf
+        self.channels = channels
         self.loss_type = loss_type
 
     def compute_gan_loss(self, output_real, output_fake):
@@ -179,20 +173,16 @@ class BaseDiscriminator(basemodel.BaseModel):
                    optD,
                    log_data,
                    device=None,
-                   global_step=None,
                    **kwargs):
         r"""
         Takes one training step for D.
 
         Args:
-            real_batch (Tensor): A batch of real signals of shape (N, C, H, W).
-            loss_type (str): Name of loss to use for GAN loss.
+            real_batch (Tensor): A batch of real signals.
             netG (nn.Module): Generator model for obtaining fake signals.
             optD (Optimizer): Optimizer for updating discriminator's parameters.
-            device (torch.device): Device to use for running the model.
             log_data (dict): A dict mapping name to values for logging uses.
-            global_step (int): Variable to sync training, logging and checkpointing.
-                Useful for dynamic changes to model amidst training.
+            device (torch.device): Device to use for running the model.
 
         Returns:
             MetricLog: Returns MetricLog object containing updated logging variables after 1 training step.
