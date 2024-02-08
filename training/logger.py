@@ -13,12 +13,11 @@ class Logger:
     
     Attributes:
         log_dir (str): The path to store logging information.
-        num_steps (int): Total number of training iterations.
+        num_steps (int): Total number of training iterations (epoch).
         dataset_size (int): The number of examples in the dataset.
         device (Device): Torch device object to send data to.
         flush_secs (int): Number of seconds before flushing summaries to disk.
         writers (dict): A dictionary of tensorboard writers with keys as metric names.
-        num_epochs (int): The number of epochs, for extra information.
     """
     def __init__(self,
                  log_dir,
@@ -31,19 +30,12 @@ class Logger:
         self.num_steps = num_steps
         self.dataset_size = dataset_size
         self.flush_secs = flush_secs
-        self.num_epochs = self._get_epoch(num_steps)
         self.device = device
         self.writers = {}
 
         # Create log directory if haven't already
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir)
-
-    def _get_epoch(self, steps):
-        """
-        Helper function for getting epoch.
-        """
-        return max(int(steps / self.dataset_size), 1)
 
     def _build_writer(self, metric):
         writer = SummaryWriter(log_dir=os.path.join(self.log_dir, 'data',
@@ -95,9 +87,7 @@ class Logger:
         """
         # Basic information
         log_to_show = [
-            "INFO: [Epoch {:d}/{:d}][Global Step: {:d}/{:d}]".format(
-                self._get_epoch(global_step), self.num_epochs, global_step,
-                self.num_steps)
+            "INFO: [Epoch: {:d}/{:d}]".format(global_step, self.num_steps)
         ]
 
         # Display GAN information as fed from user.

@@ -38,14 +38,14 @@ class Trainer:
                  dataloader,
                  num_steps,
                  log_dir='./log',
-                 n_dis=1,
+                 n_dis=5,
                  device=None,
                  netG_ckpt_file=None,
                  netD_ckpt_file=None,
                  print_steps=1,
-                 log_steps=50,
-                 save_steps=5000,
-                 flush_secs=30):
+                 log_steps=25,
+                 save_steps=50,
+                 flush_secs=50):
         # Input values checks
         required_params = {
             'num_steps': num_steps,
@@ -185,9 +185,8 @@ class Trainer:
         except StopIteration:
             iter_dataloader = iter(self.dataloader)
             real_batch = next(iter_dataloader)
-
-        real_batch = (real_batch[0].to(self.device),
-                      real_batch[1].to(self.device))
+        
+        real_batch = real_batch[0].to(self.device)
 
         return iter_dataloader, real_batch
 
