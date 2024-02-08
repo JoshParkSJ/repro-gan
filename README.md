@@ -11,6 +11,13 @@ repro-gan is an open-source PyTorch 1D GAN library that provides you with module
 - Out-of-the-box GAN and WGAN-GP models for reproducible GANs
 - Composible loss functions in variety
 
+## Installation
+Repro-gan is live on pypi https://pypi.org/project/repro-gan/0.0.1/
+
+```
+pip install repro-gan
+```
+
 ## Usage
 Example usage for building a simple WGAN-GP model
 
