@@ -38,8 +38,7 @@ class Logger:
             os.makedirs(self.log_dir)
 
     def _build_writer(self, metric):
-        writer = SummaryWriter(log_dir=os.path.join(self.log_dir, 'data',
-                                                    metric),
+        writer = SummaryWriter(log_dir=os.path.join(self.log_dir, 'data', metric),
                                flush_secs=self.flush_secs)
 
         return writer
