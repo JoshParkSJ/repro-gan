@@ -1,6 +1,6 @@
 # repro-gan
 <p align="center">
-  <img src='assets/tensorboard.png'  align="center" width='100%'>
+  <img src='assets/repro-gan.png'  align="center" width='100%'>
 </p>
 -----
 [![PyPI version](https://badge.fury.io/py/torch-mimicry.svg)](https://pypi.org/project/repro-gan/0.0.1/) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
