@@ -1,4 +1,3 @@
-# repro-gan
 <p align="center">
   <img src='assets/repro-gan.png'  align="center" width='50%'>
 </p>
