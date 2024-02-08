@@ -12,8 +12,6 @@ repro-gan is an open-source PyTorch 1D GAN library that provides you with module
 - Composible loss functions in variety
 
 ## Installation
-Repro-gan is live on pypi https://pypi.org/project/repro-gan/0.0.1/
-
 ```
 pip install repro-gan
 ```
