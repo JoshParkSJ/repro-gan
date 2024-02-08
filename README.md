@@ -3,7 +3,6 @@
 repro-gan is an open-source 1D PyTorch GAN library that provides you with modules, utilities, and metrics to create GAN models easily. The main goal of this library is to improve the reproducibility of 1D GANs and make it easier for researchers and developers to experiment with GAN models. 
 
 ## Features
-
 - Customizable modules for building discriminator and generator neural networks
 - Utility functions such as tensorboard visualization, loggers, and trainer
 - FID score calculation for evaluating the performance of GAN models
@@ -17,13 +16,11 @@ Example usage for building a simple WGAN-GP model
 class Discriminator(WGANGPBaseDiscriminator):
     def __init__(self, **kwargs):
         super().__init__(channels=64)
-
         self.block1 = DBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, downsample=True)
         self.block2 = DBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, downsample=True)
         self.block3 = DBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, downsample=True)
         self.conv = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=1, stride=1, padding=0)
         self.end = nn.Linear(394, 1)
-        
         nn.init.normal_(self.conv.weight.data, 0.0, 0.02)
         nn.init.normal_(self.end.weight.data, 0.0, 0.02)
 
@@ -39,14 +36,10 @@ class Discriminator(WGANGPBaseDiscriminator):
 class Generator(WGANGPBaseGenerator):
     def __init__(self, **kwargs):
         super().__init__(channels=64, nz=3152) # noise shape will start off as real_data.shape[0] x channels x nz
-
-        # Build the layers
         self.block1 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=False)
         self.block2 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=False)
         self.block3 = GBlock(in_channels=64, out_channels=64, kernel_size=3, stride=1, padding=1, upsample=False)
         self.conv = nn.Conv1d(in_channels=64, out_channels=64, kernel_size=1, stride=1, padding=0)
-
-        # Initialise the weights
         nn.init.normal_(self.conv.weight.data, 0.0, 0.02)
 
     def forward(self, x):
@@ -57,7 +50,6 @@ class Generator(WGANGPBaseGenerator):
         h = self.conv(h)
         return h
     
-
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
 data = torch.tensor(np.load("./examples/test_data.npy")).detach() # torch.Size([2, 64, 3152])
 dataloader = DataLoader(
@@ -65,10 +57,8 @@ dataloader = DataLoader(
     batch_size=1,
     shuffle=True
 )
-
 netD = Discriminator().to(device)
 netG = Generator().to(device)
-
 optD = optim.Adam(netD.parameters(), 0.0001, (0.5, 0.99))
 optG = optim.Adam(netG.parameters(), 0.0001, (0.5, 0.99))
 
@@ -87,7 +77,6 @@ trainer = Trainer(
     device=device)
 trainer.train()
 ```
-
 
 ## Tensorboard
 Open terminal and use `logdir` to point to your model's checkpoints
