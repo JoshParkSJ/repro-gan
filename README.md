@@ -5,9 +5,11 @@
 -----
 [![PyPI version](https://badge.fury.io/py/torch-mimicry.svg)](https://pypi.org/project/repro-gan/0.0.1/) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
+## About
 repro-gan is an open-source PyTorch 1D GAN library that provides you with modules, utilities, and metrics to create GAN models easily. The main goal of this library is to improve the reproducibility of 1D GANs and make it easier for researchers and developers to experiment with GAN models. This library consists of customizable modules for building discriminator and generator neural networks, utility functions such as tensorboard and loggers for plotting loss and probability values, and FID score calculation for evaluating the performance of GAN models. Repro-gan also provides out-of-the-box GAN and WGAN-GP models for reproducible GANs and a variety of composible loss functions.
 
 ## Installation
+Repro-gan is available on Pypi: https://pypi.org/project/repro-gan/0.0.1/
 ```
 pip install repro-gan
 ```
