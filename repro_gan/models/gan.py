@@ -2,8 +2,8 @@
 Implementation of Base GAN models.
 """
 import torch
-from modules import basemodel
-from modules import losses
+from ..modules import basemodel
+from ..modules import losses
 
 class BaseGenerator(basemodel.BaseModel):
     r"""

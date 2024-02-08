@@ -5,8 +5,8 @@ import os
 import re
 import time
 import torch
-from training import logger, metric_log
-from utils import common
+from ..training import logger, metric_log
+from ..utils import common
 
 
 class Trainer:

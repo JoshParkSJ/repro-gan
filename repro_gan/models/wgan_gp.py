@@ -3,7 +3,7 @@ Implementation of the base classes for WGAN-GP generator and discriminator.
 """
 import torch
 from torch import autograd
-from models import gan
+from ..models import gan
 
 
 class WGANGPBaseGenerator(gan.BaseGenerator):

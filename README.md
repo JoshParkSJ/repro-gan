@@ -4,10 +4,10 @@ repro-gan is an open-source 1D PyTorch GAN library that provides you with module
 
 ## Features
 - Customizable modules for building discriminator and generator neural networks
-- Utility functions such as tensorboard visualization, loggers, and trainer
+- Utility functions such as tensorboard and loggers for plotting loss and probability values
 - FID score calculation for evaluating the performance of GAN models
 - Out-of-the-box GAN and WGAN-GP models for reproducible GANs
-- Composable loss functions in variety
+- Composible loss functions in variety
 
 ## Usage
 Example usage for building a simple WGAN-GP model
@@ -88,3 +88,4 @@ tensorboard --logdir ./logs
 <p align="center">
   <img src='assets/tensorboard.png'  align="center" width='100%'>
 </p>
+
