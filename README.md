@@ -11,8 +11,9 @@ repro-gan is an open-source 1D PyTorch GAN library that provides you with module
 - Composable loss functions in variety
 
 ## Usage
+Example usage for building a simple WGAN-GP model
 
-```{python}
+```
 class Discriminator(WGANGPBaseDiscriminator):
     def __init__(self, **kwargs):
         super().__init__(channels=64)
@@ -58,7 +59,6 @@ class Generator(WGANGPBaseGenerator):
     
 
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
-os.chdir('c:\\Users\\joshua.park\\Desktop\\repro-gan')
 data = torch.tensor(np.load("./examples/test_data.npy")).detach() # torch.Size([2, 64, 3152])
 dataloader = DataLoader(
     TensorDataset(data),
@@ -97,5 +97,5 @@ tensorboard --logdir ./logs
 ```
 
 <p align="center">
-  <img src='assets/tensorboard.png.png'  align="center" width='100%'>
+  <img src='assets/tensorboard.png'  align="center" width='100%'>
 </p>
